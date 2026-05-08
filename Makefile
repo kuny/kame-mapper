@@ -16,8 +16,7 @@ build:
 
 dist:
 	raco distribute dist main
-	mkdir -p ./dist/bin/sexp
-	cp ./sexp/*.sexp ./dist/bin/sexp
+	cp -r ./sexp ./dist/bin
 
 run:
 	@rlwrap ./main
