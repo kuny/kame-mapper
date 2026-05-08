@@ -195,19 +195,20 @@
 
 (define (evaluate expr)
   (cond ((null? expr) '())
-        ((reserved-function? expr)
-         (eval-reserved-function expr))
+;        ((reserved-function? expr)
+;         (eval-reserved-function expr))
         ((shell-command? expr)
          (eval-shell-command expr))
         ((extension-command? expr)
          (eval-extension-command expr))
-        (else 
-          (match expr
-            [(list x ...) 
-             (cons (evaluate (car expr)) 
-                   (evaluate (cdr expr)))]
-            [x expr]
-            [_ (undefined expr)]))))
+        (else
+          (undefined expr))))
+;          (match expr
+;            [(list x ...) 
+;             (cons (evaluate (car expr)) 
+;                   (evaluate (cdr expr)))]
+;            [x expr]
+;            [_ (undefined expr)]))))
 
 (define (repl)
   (define (read-command)
