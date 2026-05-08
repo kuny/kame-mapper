@@ -29,10 +29,10 @@ status:
 	git status
 
 commit:
-	git pull origin main
-	git add .
-	git commit -m "update $$(date +%Y-%m-%d\ %H:%M:%S)"
-	git push origin main
+	-git pull origin main
+	-git add .
+	-git commit -m "update $$(date +%Y-%m-%d\ %H:%M:%S)"
+	-git push origin main
 
 pull:
-	git pull origin main
+	-git pull origin main
