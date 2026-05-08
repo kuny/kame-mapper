@@ -17,6 +17,7 @@ build:
 dist:
 	raco distribute dist mapper
 	cp -r ./sexp ./dist/bin
+	cp -r ./scripts ./dist/bin
 	rm -f ./mapper
 
 run:

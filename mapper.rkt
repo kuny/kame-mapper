@@ -136,7 +136,7 @@
         ((pair? expr)
          (match (car expr)
            ['open #t]
-           ['shell #t]
+           ['system #t]
            [_ #f]))
         (else #f)))
 
@@ -155,9 +155,15 @@
            (else #f))]
     [(_ _) (undefined expr)]))
 
+(define (eval-system expr)
+  (match* ((car expr) (cdr expr))
+    [('system (list x)) (system x)]
+    [(_ _) (undefined expr)]))
+
 (define (eval-shell-command expr)
   (match* ((car expr) (cdr expr))
     [('open _) (eval-open expr)]
+    [('system _) (eval-system expr)]
     [(_ _) (undefined expr)]))
 
 (define (extension-file sym)
