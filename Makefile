@@ -5,7 +5,7 @@
 
 .PHONY: all clean build run test status commit pull
 
-all: clean build dist
+all: commit clean build dist
 
 clean:
 	rm -f ./main
