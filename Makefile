@@ -8,7 +8,7 @@
 all: clean build dist
 
 clean:
-	rm ./main
+	rm -f ./main
 	rm -rf ./dist
 
 build:
