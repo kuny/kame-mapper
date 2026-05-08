@@ -14,7 +14,7 @@ build:
 	raco exe main.rkt
 
 run:
-	rlwrap racket main.rkt
+	@rlwrap ./main
 
 test:
 	raco test main.rkt
