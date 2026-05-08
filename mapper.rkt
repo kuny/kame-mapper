@@ -74,7 +74,7 @@
           (display-lines (cdr lines)))))
 
 (define (undefined expr)
-  (format (red bold "~s undefined") expr))
+  (format (red bold "~a ~s undefined ~a") "🔥" expr "🔥"))
 
 (define (help)
   (begin
