@@ -8,22 +8,22 @@
 all: commit clean build dist
 
 clean:
-	rm -f ./main
+	rm -f ./mapper
 	rm -rf ./dist
 
 build:
-	raco exe main.rkt
+	raco exe mapper.rkt
 
 dist:
-	raco distribute dist main
+	raco distribute dist mapper
 	cp -r ./sexp ./dist/bin
-	rm -f ./main
+	rm -f ./mapper
 
 run:
-	@rlwrap ./main
+	@rlwrap racket mapper.rkt
 
 test:
-	raco test main.rkt
+	raco test mapper.rkt
 
 status:
 	git status
