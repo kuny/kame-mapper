@@ -17,6 +17,7 @@ build:
 dist:
 	raco distribute dist main
 	cp -r ./sexp ./dist/bin
+	rm -f ./main
 
 run:
 	@rlwrap ./main
