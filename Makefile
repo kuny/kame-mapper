@@ -5,13 +5,19 @@
 
 .PHONY: all clean build run test status commit pull
 
-all: clean build
+all: clean build dist
 
 clean:
 	rm ./main
+	rm -rf ./dist
 
 build:
 	raco exe main.rkt
+
+dist:
+	raco distribute dist main
+	mkdir -p ./dist/bin/sexp
+	cp ./sexp/*sexp ./dist/bin/sexp
 
 run:
 	@rlwrap ./main
