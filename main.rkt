@@ -107,15 +107,22 @@
            [_ #f]))
         (else #f)))
 
+(define (eval-args args)
+  (let loop ((lst args) (ret '()))
+    (cond ((null? lst) (reverse ret))
+          (else
+            (loop (cdr lst)
+                  (cons (evaluate (car lst)) ret))))))
+
 (define (eval-reserved-function expr)
   (match* ((car expr) (cdr expr))
-    [('+ _) (apply + (evaluate (cdr expr)))]
-    [('- _) (apply - (evaluate (cdr expr)))]
-    [('* _) (apply * (evaluate (cdr expr)))]
-    [('/ _) (apply / (evaluate (cdr expr)))]
-    [('= _) (apply = (evaluate (cdr expr)))]
-    [('> _) (apply > (evaluate (cdr expr)))]
-    [('< _) (apply < (evaluate (cdr expr)))]
+    [('+ _) (apply + (eval-args (cdr expr)))]
+    [('- _) (apply - (eval-args (cdr expr)))]
+    [('* _) (apply * (eval-args (cdr expr)))]
+    [('/ _) (apply / (eval-args (cdr expr)))]
+    [('= _) (apply = (eval-args (cdr expr)))]
+    [('> _) (apply > (eval-args (cdr expr)))]
+    [('< _) (apply < (eval-args (cdr expr)))]
     [('exact->inexact _) (apply exact->inexact (evaluate (cdr expr)))]
     [('list _) (apply list (evaluate (cdr expr)))]
     [('car _) (apply car (evaluate (cdr expr)))]
@@ -166,6 +173,10 @@
     (file-exists? (extension-file (car expr)))
     #f))
 
+(define (atom? expr)
+  (or (number? expr)
+      (string? expr)))
+
 (define (eval-extension-command expr)
   (define (print-commands-list cmds expr)
     (cond ((null? cmds) #t)
@@ -195,20 +206,15 @@
 
 (define (evaluate expr)
   (cond ((null? expr) '())
-;        ((reserved-function? expr)
-;         (eval-reserved-function expr))
+        ((reserved-function? expr)
+         (eval-reserved-function expr))
         ((shell-command? expr)
          (eval-shell-command expr))
         ((extension-command? expr)
          (eval-extension-command expr))
+        ((atom? expr) expr)
         (else
           (undefined expr))))
-;          (match expr
-;            [(list x ...) 
-;             (cons (evaluate (car expr)) 
-;                   (evaluate (cdr expr)))]
-;            [x expr]
-;            [_ (undefined expr)]))))
 
 (define (repl)
   (define (read-command)
