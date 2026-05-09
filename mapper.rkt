@@ -270,6 +270,12 @@
     #:args ()
     (printf "hello ~a~n" (unbox who)))
 |#
+  (displayln "🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢")
+  (newline)
+  (displayln "        KAME-MAPPER version 0.0.0")
+  (newline)
+  (displayln "🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢")
+  (newline)
   (define x (repl))
 )
 
