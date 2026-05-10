@@ -2,9 +2,9 @@
 (module+ test
   (require rackunit))
 
-(require racket/match
-         racket/system
-         racket/gui)
+(require racket/match)
+(require racket/system)
+(require racket/gui)
 
 (define env (box '()))
 
