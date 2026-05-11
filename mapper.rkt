@@ -109,6 +109,7 @@
            ['cons #t]
            ['begin #t]
            ['displayln #t]
+           ['newline #t]
            [_ #f]))
         (else #f)))
 
@@ -142,6 +143,7 @@
     [('cons _) (apply cons (evaluate (cdr expr)))]
     [('begin _) (eval-begin expr)]
     [('displayln _) (apply displayln (cdr expr))]
+    [('newline _) (newline)]
     [(_ _) '()]))
 
 ;; for shell command
