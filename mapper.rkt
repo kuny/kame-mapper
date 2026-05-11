@@ -163,11 +163,6 @@
      (system (format "open -a \"~a\"" x))]
     [('open (list '-a x y))
      (system (format "open -a \"~a\" \"~a\"" x y))]
-    [('open (list '-a x y z))
-     (cond ((system (format "open -a \"~a\" \"~a\"" x y))
-            (displayln (format "~a" z))
-            #t)
-           (else #f))]
     [(_ _) (undefined expr)]))
 
 (define (eval-system expr)
