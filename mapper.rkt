@@ -107,6 +107,7 @@
            ['car #t]
            ['cdr #t]
            ['cons #t]
+           ['begin #t]
            [_ #f]))
         (else #f)))
 
@@ -116,6 +117,13 @@
           (else
             (loop (cdr lst)
                   (cons (evaluate (car lst)) ret))))))
+
+(define (eval-begin expr)
+  (let loop ((x (cdr expr)) (ret '()))
+    (cond ((null? x) ret)
+          (else
+            (loop (cdr x)
+                  (evaluate (car x)))))))
 
 (define (eval-reserved-function expr)
   (match* ((car expr) (cdr expr))
@@ -131,6 +139,7 @@
     [('car _) (apply car (evaluate (cdr expr)))]
     [('cdr _) (apply cdr (evaluate (cdr expr)))]
     [('cons _) (apply cons (evaluate (cdr expr)))]
+    [('begin _) (eval-begin expr)]
     [(_ _) '()]))
 
 ;; for shell command
