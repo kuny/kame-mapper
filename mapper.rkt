@@ -3,8 +3,7 @@
   (require rackunit))
 
 (require racket/match
-         racket/system
-         racket/gui)
+         racket/system)
 
 (define env (box '()))
 
@@ -64,6 +63,9 @@
      (format "\x1b[36m~a\x1b[0m" x)]
     [(cyan bold x)
      (format "\u001b[1;36m~a\u001b[0m" x)]))
+
+(define (~a x)
+  (format "~a" x))
 
 (define (display-lines lines)
   (cond ((null? lines) '())
@@ -138,6 +140,7 @@
          (match (car expr)
            ['open #t]
            ['system #t]
+           ['pbcopy #t]
            [_ #f]))
         (else #f)))
 
@@ -161,10 +164,17 @@
     [('system (list x)) (system x)]
     [(_ _) (undefined expr)]))
 
+(define (eval-pbcopy expr)
+  (match* ((car expr) (cdr expr))
+    [('pbcopy (list x)) 
+     (system (format "echo '~a' | pbcopy" x))]
+    [(_ _) (undefined expr)]))
+
 (define (eval-shell-command expr)
   (match* ((car expr) (cdr expr))
     [('open _) (eval-open expr)]
     [('system _) (eval-system expr)]
+    [('pbcopy _) (eval-pbcopy expr)]
     [(_ _) (undefined expr)]))
 
 (define (extension-file sym)
