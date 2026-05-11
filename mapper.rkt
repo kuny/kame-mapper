@@ -108,6 +108,7 @@
            ['cdr #t]
            ['cons #t]
            ['begin #t]
+           ['displayln #t]
            [_ #f]))
         (else #f)))
 
@@ -140,6 +141,7 @@
     [('cdr _) (apply cdr (evaluate (cdr expr)))]
     [('cons _) (apply cons (evaluate (cdr expr)))]
     [('begin _) (eval-begin expr)]
+    [('displayln _) (apply displayln (cdr expr))]
     [(_ _) '()]))
 
 ;; for shell command
