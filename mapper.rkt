@@ -213,16 +213,20 @@
               (displayln (format "(~a ~a) \"~a\"" (car expr) sym note)))
             (print-commands-list (cdr cmds) expr))))
   (define (lookup-command cmds expr)
-    (let ((data (assq (second expr) cmds)))
-      (if data
-        (cdr (assq 'command (cdr data)))
-        #f)))
+    (if (symbol? (car cmds))
+      #f
+      (let ((data (assq (second expr) cmds)))
+        (if data
+          (cdr (assq 'command (cdr data)))
+          #f))))
 
   (let ((cmds (read-sexp (car expr))))
     (match* ((car expr) (cdr expr))
       [(a (list (or 'list '?)))
        (let ((cmds (read-sexp (car expr))))
-         (print-commands-list cmds expr))]
+         (if (symbol? (car cmds))
+           (undefined expr)
+           (print-commands-list cmds expr)))]
       [(a '())
        (let ((cmd (read-sexp (car expr))))
          (if (symbol? (car cmd))
