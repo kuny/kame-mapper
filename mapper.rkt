@@ -247,7 +247,7 @@
 (define (repl)
   (define (read-command)
 ;    (display (green bold "> "))
-    (display (green bold "🐢 "))
+    (display "🐢 ")
     (read))
   (let ([expr (read-command)])
     (cond [(exit? expr) #f]
