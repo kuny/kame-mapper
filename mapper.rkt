@@ -223,7 +223,9 @@
          (print-commands-list cmds expr))]
       [(a '())
        (let ((cmd (read-sexp (car expr))))
-         (evaluate cmd))]
+         (if (symbol? (car cmd))
+           (evaluate cmd)
+           (undefined expr)))]
       [(a (list b)) 
        (let* ((cmds (read-sexp (car expr)))
               (cmd (lookup-command cmds expr)))
