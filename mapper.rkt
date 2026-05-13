@@ -222,22 +222,25 @@
     (match* ((car expr) (cdr expr))
       [(a (list (or 'list '?)))
        (let ((cmds (read-sexp (car expr))))
-         (if (association-list? (car cmds))
-           (print-commands-list cmds expr)
-           (undefined expr)))]
+         (print-commands-list cmds expr))]
       [(a '())
        (let ((cmd (read-sexp (car expr))))
          (if (symbol? (car cmd))
            (evaluate cmd)
            (undefined expr)))]
+      [(a (list b))
+       (let* ((cmds (read-sexp (car expr)))
+              (cmd (lookup-command cmds expr)))
+         (if cmd
+           (evaluate cmd)
+           (undefined expr)))]
       [(a (list b)) 
-       (let ((cmds (read-sexp (car expr))))
-         (if (association-list? (car cmds))
-           (let ((cmd (lookup-command cmds expr)))
-             (if  cmd
-               (evaluate cmd)
-               (undefined expr)))
-           (undefined expr)))])))
+       (let* ((cmds (read-sexp (car expr)))
+              (cmd (lookup-command cmds expr)))
+         (if cmd
+           (evaluate cmd)
+           (undefined expr)))]
+      [(_ _) (undefined expr)])))
 
 (define (evaluate expr)
   (cond ((null? expr) '())
