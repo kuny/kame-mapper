@@ -218,7 +218,7 @@
         #f)))
   (let ((cmds (read-sexp (car expr))))
     (match* ((car expr) (cdr expr))
-      [(a (list 'list))
+      [(a (list (or 'list '?)))
        (let ((cmds (read-sexp (car expr))))
          (print-commands-list cmds expr))]
       [(a '())
