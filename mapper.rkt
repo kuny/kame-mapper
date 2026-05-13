@@ -3,7 +3,8 @@
   (require rackunit))
 
 (require racket/match
-         racket/system)
+         racket/system
+         rebellion/collection/association-list)
 
 (define env (box '()))
 
@@ -212,17 +213,16 @@
               (displayln (format "(~a ~a) \"~a\"" (car expr) sym note)))
             (print-commands-list (cdr cmds) expr))))
   (define (lookup-command cmds expr)
-    (if (pair? (car cmds))
-      (let ((data (assq (second expr) cmds)))
-        (if data
-          (cdr (assq 'command (cdr data)))
-          #f))
-      #f))
+    (let ((data (assq (second expr) cmds)))
+      (if data
+        (cdr (assq 'command (cdr data)))
+        #f)))
+
   (let ((cmds (read-sexp (car expr))))
     (match* ((car expr) (cdr expr))
       [(a (list (or 'list '?)))
        (let ((cmds (read-sexp (car expr))))
-         (if (pair? (car cmds))
+         (if (association-list? (car cmds))
            (print-commands-list cmds expr)
            (undefined expr)))]
       [(a '())
@@ -231,12 +231,13 @@
            (evaluate cmd)
            (undefined expr)))]
       [(a (list b)) 
-       (let* ((cmds (read-sexp (car expr)))
-              (cmd (lookup-command cmds expr)))
-         (if cmd
-           (evaluate cmd)
-           (undefined expr)))]
-      [(_ _) (undefined expr)])))
+       (let ((cmds (read-sexp (car expr))))
+         (if (association-list? (car cmds))
+           (let ((cmd (lookup-command cmds expr)))
+             (if  cmd
+               (evaluate cmd)
+               (undefined expr)))
+           (undefined expr)))])))
 
 (define (evaluate expr)
   (cond ((null? expr) '())
@@ -252,11 +253,20 @@
 
 (define (repl)
   (define (read-command)
-;    (display (green bold "> "))
-    (display "🐢 ")
-    (read))
+    (with-handlers ([exn:fail?
+                      (lambda (e)
+                        (list 'read-command-error (exn-message e)))])
+                   (display "🐢 ")
+                   (read)))
+  (define (read-command-error? expr)
+    (match expr
+      [(list 'read-command-error x) #t]
+      [_ #f]))
   (let ([expr (read-command)])
-    (cond [(exit? expr) #f]
+    (cond [(read-command-error? expr) 
+           (begin 
+             (displayln (format (red bold "🔥 Error: ~a 🔥") (second expr))) (repl))]
+          [(exit? expr) #f]
           [(help? expr) (help) (repl)]
           [(version? expr) (version) (repl)]
           [else
