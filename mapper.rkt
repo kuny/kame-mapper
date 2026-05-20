@@ -155,6 +155,9 @@
            ['open #t]
            ['system #t]
            ['pbcopy #t]
+           ['ps #t]
+           ['kill #t]
+           ['killall #t]
            [_ #f]))
         (else #f)))
 
@@ -179,11 +182,29 @@
      (system (format "echo '~a' | pbcopy" x))]
     [(_ _) (undefined expr)]))
 
+(define (eval-ps expr)
+  (match* ((car expr) (cdr expr))
+    [('ps (list x))
+     (system (format "ps aux | grep ~a" x))]
+    [(_ _) (undefined expr)]))
+
+(define (eval-kill expr)
+  (match* ((car expr) (cdr expr))
+    [('kill (list x))
+     (system (format "kill -9 ~a" x))]
+    [('killall (list x))
+     (system (format "killall ~a" x))]
+    [(_ _) (undefined expr)]))
+
+
 (define (eval-shell-command expr)
   (match* ((car expr) (cdr expr))
     [('open _) (eval-open expr)]
     [('system _) (eval-system expr)]
     [('pbcopy _) (eval-pbcopy expr)]
+    [('ps _) (eval-ps expr)]
+    [('kill _) (eval-kill expr)]
+    [('killall _) (eval-kill expr)]
     [(_ _) (undefined expr)]))
 
 (define (extension-file sym)
